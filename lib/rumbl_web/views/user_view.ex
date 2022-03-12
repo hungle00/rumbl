@@ -5,7 +5,11 @@ defmodule RumblWeb.UserView do
   def first_name(%Accounts.User{name: name}) do
     name
       |> String.split(" ")
-      |> hd()
+      |> Enum.at(0)
+  end
+
+  def render("user.json", %{user: user}) do
+    %{id: user.id, username: user.username}
   end
 
 end
