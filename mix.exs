@@ -5,7 +5,7 @@ defmodule Rumbl.MixProject do
     [
       app: :rumbl,
       version: "0.1.0",
-      elixir: "~> 1.7",
+      elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
@@ -43,6 +43,7 @@ defmodule Rumbl.MixProject do
       {:phoenix_live_dashboard, "~> 0.4"},
       {:telemetry_metrics, "~> 0.4"},
       {:telemetry_poller, "~> 0.4"},
+      {:esbuild, "~> 0.2", runtime: Mix.env() == :dev},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
@@ -62,7 +63,11 @@ defmodule Rumbl.MixProject do
       setup: ["deps.get", "ecto.setup", "cmd npm install --prefix assets"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-      test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"]
+      test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
+      "assets.deploy": [
+        "esbuild default --minify",
+        "phx.digest"
+      ]
     ]
   end
 end
